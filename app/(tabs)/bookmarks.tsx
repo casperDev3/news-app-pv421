@@ -1,13 +1,13 @@
 import {View, Text} from 'react-native';
 
-const ExploreScreen = () => {
+const BookmarksScreen = () => {
     return (
         <View>
             <Text>
-                Explore Screen
+                Bookmarks Screen
             </Text>
         </View>
     )
 }
 
-export default ExploreScreen;
+export default BookmarksScreen;
