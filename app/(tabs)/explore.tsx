@@ -7,6 +7,9 @@ import {useState} from "react";
 import {Link} from "expo-router";
 import {Grayscale} from "@/constants/colors";
 
+// mock data
+import {news} from "@/mockup/news";
+
 
 const ExploreScreen = () => {
     // init
@@ -37,9 +40,11 @@ const ExploreScreen = () => {
                             See All
                         </Link>
                     </View>
-                    <CompactTopicCard/>
-                    <CompactTopicCard/>
-                    <CompactTopicCard/>
+                    {
+                        news.length > 0 && news.map((item) => (
+                            <CompactTopicCard key={item.id} data={item}/>
+                        ))
+                    }
                 </View>
                 <View style={s.PT}>
                     <View style={s.PTHeader}>

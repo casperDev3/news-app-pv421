@@ -3,24 +3,35 @@ import PrimaryButton from "@/components/ui/buttons/primary"
 import OutlineButton from "@/components/ui/buttons/outline"
 import {useFonts, Poppins_500Medium} from "@expo-google-fonts/poppins"
 import {Grayscale} from "@/constants/colors";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {toggleBookmark, Article} from "@/store/slices/bookmarksSlice";
+import {RootState} from "@/store";
 
-const CompactTopicCard = () => {
+const CompactTopicCard = ({data}: any) => {
     // init
     const [fontsLoaded] = useFonts({
         Poppins_500Medium
     })
     const [isSaved, setIsSaved] = useState<boolean>(true)
-
+    const {id, title, country} = data
+    const dispatch = useDispatch();
+    const bookmarks = useSelector((state: RootState) => state.bookmarks.savedArticles)
     // load
+    useEffect(() => {
+        // check existing id into bookmarks
+        const isExist = bookmarks.some((bookmark) => bookmark.id === id)
+        setIsSaved(isExist)
+    }, [bookmarks])
+
     if (!fontsLoaded) {
         return null
     }
 
+
     // handlers
-    const buttonHandler = () => {
-        console.log("button clicked", !isSaved)
-        setIsSaved(!isSaved)
+    const handleSave = (data: Article) => {
+        dispatch(toggleBookmark(data))
     }
 
     return (
@@ -28,16 +39,19 @@ const CompactTopicCard = () => {
             <View style={s.content}>
                 <Image style={s.contentImage} source={require("@/assets/photos/ph_ship.png")}/>
                 <View style={s.contentText}>
-                    <Text style={s.contentTextTitle}>Health</Text>
-                    <Text style={s.contentTextDesc} numberOfLines={2}>Get energizing workout moves, healthy
-                        recipes...</Text>
+                    <Text style={s.contentTextTitle}>{title}</Text>
+                    <Text style={s.contentTextDesc} numberOfLines={2}>{country}</Text>
                 </View>
             </View>
             <View style={s.action}>
                 {isSaved ? (
-                    <PrimaryButton width={78} height={34} text={"Saved"} onPress={buttonHandler}/>
+                    <PrimaryButton width={78} height={34} text={"Saved"} onPress={() => {
+                        handleSave(data)
+                    }}/>
                 ) : (
-                    <OutlineButton width={78} height={34} text={"Save"} onPress={buttonHandler}/>
+                    <OutlineButton width={78} height={34} text={"Save"} onPress={() => {
+                        handleSave(data)
+                    }}/>
                 )}
             </View>
         </View>
