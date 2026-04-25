@@ -3,6 +3,7 @@ import {Grayscale} from "@/constants/colors";
 import {useFonts, Poppins_500Medium, Poppins_700Bold} from "@expo-google-fonts/poppins"
 import {useState} from "react";
 import {Clock} from "lucide-react-native"
+import {useRouter} from 'expo-router'
 
 const PopularTopicCard = () => {
     // init
@@ -11,6 +12,8 @@ const PopularTopicCard = () => {
         Poppins_700Bold
     })
     const [isSaved, setIsSaved] = useState<boolean>(true)
+    const router = useRouter()
+    const id = 123
 
     // load
     if (!fontsLoaded) {
@@ -18,13 +21,17 @@ const PopularTopicCard = () => {
     }
     return (
         <View style={s.card}>
-            <Image style={s.cardCover} source={require('@/assets/photos/ph_ship.png')} />
+            <TouchableOpacity onPress={() => router.push(`/news/${id}`)}>
+                <Image style={s.cardCover} source={require('@/assets/photos/ph_ship.png')}/>
+            </TouchableOpacity>
             <Text style={s.cardCountry}>
                 Ukraine
             </Text>
-            <Text style={s.cardTitle}>
-                Russian warship: Moskva sinks in Black Sea
-            </Text>
+            <TouchableOpacity onPress={() => router.push(`/news/${id}`)}>
+                <Text style={s.cardTitle}>
+                    Russian warship: Moskva sinks in Black Sea
+                </Text>
+            </TouchableOpacity>
             <View style={s.cardDetails}>
                 <View style={s.cardDetailsMeta}>
                     <View style={s.CDMSource}>
@@ -41,8 +48,9 @@ const PopularTopicCard = () => {
                     </View>
                 </View>
                 <View style={s.cardDetailsMore}>
-                    <TouchableOpacity style={s.CDMButton} onPress={() => {}}>
-                        <Text style={s.CDMButtonIcon} >
+                    <TouchableOpacity style={s.CDMButton} onPress={() => {
+                    }}>
+                        <Text style={s.CDMButtonIcon}>
                             ...
                         </Text>
                     </TouchableOpacity>
@@ -52,7 +60,7 @@ const PopularTopicCard = () => {
     )
 }
 
-const s =  StyleSheet.create({
+const s = StyleSheet.create({
     card: {
         marginBottom: 30
     },
