@@ -7,7 +7,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-    isFirstLaunch: null,
+    isFirstLaunch: true,
     isAuthenticated: false,
     isLoading: false,
 }
@@ -17,7 +17,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         setInitData: (state, action: PayloadAction<{
-            firstLaunch: boolean,
+            firstLaunch: boolean | null,
             loggedIn: boolean,
         }>) => {
             state.isFirstLaunch = action.payload.firstLaunch;

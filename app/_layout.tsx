@@ -1,31 +1,49 @@
-import {Stack} from 'expo-router';
-import {StatusBar} from 'expo-status-bar';
-import 'react-native-reanimated';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/integration/react';
-import {store, persistor} from "@/store";
+import {useEffect} from "react";
+import {Slot, useRouter, useSegments} from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import {Provider, useSelector, useDispatch} from "react-redux";
+import {store, RootState} from "@/store";
+import {setInitData} from "@/store/slices/authSlice";
 
+SplashScreen.preventAutoHideAsync()
 
-export const unstable_settings = {
-    anchor: '(tabs)',
-};
+function NavigationGuard() {
+    //init
+    // const dispatch = useDispatch();
+    const router = useRouter();
+    const segments = useSegments();
+    const {isFirstLaunch, isLoading, isAuthenticated} = useSelector((s: RootState) => s.auth)
+
+    // useEffect(() => {
+    //     (async ()=>{
+    //         dispatch(setInitData({firstLaunch: isFirstLaunch, loggedIn: false}))
+    //         await SplashScreen.hideAsync()
+    //     })()
+    // }, []);
+
+    useEffect(() => {
+        if (isLoading) return;
+
+        const inAuthGroup = segments[0] === '(auth)'
+        const inOnboardingGroup = segments[0] === 'onboarding'
+
+        if (isFirstLaunch){
+            if (!inOnboardingGroup) router.replace('/onboarding')
+        } else if (!isAuthenticated){
+            if (!inAuthGroup) router.replace('/(auth)/login')
+        } else {
+            if (inAuthGroup || inOnboardingGroup) router.replace('/(tabs)')
+        }
+
+    }, [isLoading, isAuthenticated, isFirstLaunch, segments]);
+
+    return <Slot/>
+}
 
 export default function RootLayout() {
     return (
-        <>
-            <Provider store={store}>
-                <PersistGate loading={null} persistor={persistor}>
-                    <Stack>
-                        <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
-                        <Stack.Screen name="news" options={{headerShown: false}}/>
-                        <Stack.Screen name="onboarding" options={{headerShown: false}}/>
-                        <Stack.Screen name="(auth)" options={{headerShown: false}}/>
-                        <Stack.Screen name="settings" options={{headerShown: false}}/>
-                        <Stack.Screen name="edit-profile" options={{headerShown: false}}/>
-                    </Stack>
-                    <StatusBar style="auto"/>
-                </PersistGate>
-            </Provider>
-        </>
-    );
+        <Provider store={store}>
+            <NavigationGuard/>
+        </Provider>
+    )
 }
