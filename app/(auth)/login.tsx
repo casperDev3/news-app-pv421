@@ -1,6 +1,8 @@
 import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
 import {useFonts, Poppins_700Bold, Poppins_400Regular, Poppins_500Medium} from "@expo-google-fonts/poppins"
 import {useRouter} from "expo-router"
+import {useDispatch} from "react-redux"
+import {login} from "@/store/slices/authSlice"
 import {useState} from "react"
 import {Grayscale, Primary} from "@/constants/colors"
 import TopSpace from "@/components/system/topSpace"
@@ -15,6 +17,7 @@ const LoginScreen = () => {
     // init
     const [fontsLoaded] = useFonts({Poppins_700Bold, Poppins_400Regular, Poppins_500Medium})
     const router = useRouter()
+    const dispatch = useDispatch()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
@@ -26,6 +29,7 @@ const LoginScreen = () => {
     const handleLogin = () => {
         if (email === TEST_EMAIL && password === TEST_PASSWORD) {
             setError("")
+            dispatch(login())
             router.replace('/(tabs)')
         } else {
             setError("Невірний email або пароль")
@@ -36,6 +40,7 @@ const LoginScreen = () => {
         setEmail(TEST_EMAIL)
         setPassword(TEST_PASSWORD)
         setError("")
+        dispatch(login())
         router.replace('/(tabs)')
     }
 

@@ -5,6 +5,8 @@ import {useState} from "react"
 import {ChevronLeft, ChevronRight, Bell, Lock, Globe, Info, LogOut, Smartphone, KeyRound} from "lucide-react-native"
 import {Grayscale, Primary} from "@/constants/colors"
 import TopSpace from "@/components/system/topSpace"
+import {useDispatch} from "react-redux";
+import {logout} from "@/store/slices/authSlice";
 
 interface SettingsRowProps {
     icon: React.ReactNode;
@@ -57,13 +59,16 @@ const SettingsScreen = () => {
     const [fontsLoaded] = useFonts({Poppins_700Bold, Poppins_400Regular, Poppins_500Medium})
     const router = useRouter()
     const [notifications, setNotifications] = useState(true)
+    const dispatch = useDispatch()
 
     // load
     if (!fontsLoaded) return null
 
     // handlers
     const handleLogout = () => {
-        router.replace('/(auth)/login')
+        dispatch(logout())
+        // router.replace('/(auth)/login')
+
     }
 
     return (

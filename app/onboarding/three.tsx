@@ -1,6 +1,8 @@
 import {View, Text, StyleSheet, Image, TouchableOpacity, Dimensions} from 'react-native'
 import {useFonts, Poppins_700Bold, Poppins_400Regular, Poppins_500Medium} from "@expo-google-fonts/poppins"
 import {useRouter} from "expo-router"
+import {useDispatch} from "react-redux"
+import {finishOnboarding} from "@/store/slices/authSlice"
 import {Grayscale, Primary} from "@/constants/colors"
 import PrimaryButton from "@/components/ui/buttons/primary"
 import OutlineButton from "@/components/ui/buttons/outline"
@@ -11,6 +13,7 @@ const Onboarding3Screen = () => {
     // init
     const [fontsLoaded] = useFonts({Poppins_700Bold, Poppins_400Regular, Poppins_500Medium})
     const router = useRouter()
+    const dispatch = useDispatch()
 
     // load
     if (!fontsLoaded) return null
@@ -41,14 +44,14 @@ const Onboarding3Screen = () => {
                     width={null}
                     height={52}
                     text="Get Started"
-                    onPress={() => router.replace('/(auth)/login')}
+                    onPress={() => { dispatch(finishOnboarding()); router.replace('/(auth)/signup') }}
                 />
                 <View style={s.gap}/>
                 <OutlineButton
                     width={null}
                     height={48}
                     text="I already have an account"
-                    onPress={() => router.replace('/(auth)/login')}
+                    onPress={() => { dispatch(finishOnboarding()); router.replace('/(auth)/login') }}
                 />
             </View>
         </View>

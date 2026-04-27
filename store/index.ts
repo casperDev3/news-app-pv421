@@ -13,13 +13,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import bookmarksReduser from './slices/bookmarksSlice';
 import authReducer from './slices/authSlice';
 
-const persistConfig = {
-    key: 'root',
-    storage: AsyncStorage
-}
+const bookmarksPersistConfig = { key: 'bookmarks', storage: AsyncStorage };
+const authPersistConfig = { key: 'auth', storage: AsyncStorage };
 
-const persistedBookmarksReducer = persistReducer(persistConfig, bookmarksReduser);
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const persistedBookmarksReducer = persistReducer(bookmarksPersistConfig, bookmarksReduser);
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 
 export const store = configureStore({
         reducer: {
