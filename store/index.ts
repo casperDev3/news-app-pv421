@@ -11,6 +11,7 @@ import {
 } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import bookmarksReduser from './slices/bookmarksSlice';
+import authReducer from './slices/authSlice';
 
 const persistConfig = {
     key: 'root',
@@ -18,10 +19,12 @@ const persistConfig = {
 }
 
 const persistedBookmarksReducer = persistReducer(persistConfig, bookmarksReduser);
+const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
 export const store = configureStore({
         reducer: {
-            bookmarks: persistedBookmarksReducer
+            bookmarks: persistedBookmarksReducer,
+            auth: persistedAuthReducer,
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware({
