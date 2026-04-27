@@ -7,7 +7,7 @@ import {store, persistor} from "@/store";
 
 
 export const unstable_settings = {
-    anchor: '(tabs)',
+    anchor: 'index',
 };
 
 export default function RootLayout() {
@@ -17,6 +17,11 @@ export default function RootLayout() {
                 <PersistGate loading={null} persistor={persistor}>
                     <Stack>
                         <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+                        <Stack.Screen name="news" options={{headerShown: false}}/>
+                        <Stack.Screen name="onboarding" options={{headerShown: false}}/>
+                        <Stack.Screen name="(auth)" options={{headerShown: false}}/>
+                        <Stack.Screen name="settings" options={{headerShown: false}}/>
+                        <Stack.Screen name="edit-profile" options={{headerShown: false}}/>
                     </Stack>
                     <StatusBar style="auto"/>
                 </PersistGate>

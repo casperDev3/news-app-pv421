@@ -1,61 +1,59 @@
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import TopSpace from "@/components/system/topSpace";
+import {View, Text, StyleSheet, ScrollView} from 'react-native'
+import {useFonts, Poppins_700Bold, Poppins_400Regular} from "@expo-google-fonts/poppins"
+import {useState} from "react"
+import {Link} from "expo-router"
+import {Grayscale} from "@/constants/colors"
+import TopSpace from "@/components/system/topSpace"
 import CompactTopicCard from "@/components/cards/compactTopic"
-import PopularTopicCard from "@/components/cards/popularTopic";
-import {useFonts, Poppins_700Bold, Poppins_400Regular, Poppins_500Medium} from "@expo-google-fonts/poppins"
-import {useState} from "react";
-import {Link} from "expo-router";
-import {Grayscale} from "@/constants/colors";
-
-// mock data
-import {news} from "@/mockup/news";
-
+import PopularTopicCard from "@/components/cards/popularTopic"
+import {topics} from "@/mockup/topics"
+import {news} from "@/mockup/news"
 
 const ExploreScreen = () => {
     // init
-    const [fontsLoaded] = useFonts({
-        Poppins_700Bold,
-        Poppins_400Regular,
-        Poppins_500Medium
-    })
-    const [isSaved, setIsSaved] = useState<boolean>(true)
+    const [fontsLoaded] = useFonts({Poppins_700Bold, Poppins_400Regular})
+    const [savedTopics, setSavedTopics] = useState<number[]>([])
 
     // load
-    if (!fontsLoaded) {
-        return null
+    if (!fontsLoaded) return null
+
+    // handlers
+    const handleToggleSave = (id: number) => {
+        setSavedTopics(prev =>
+            prev.includes(id) ? prev.filter(t => t !== id) : [...prev, id]
+        )
     }
+
     return (
         <View style={s.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <TopSpace/>
-                <Text style={s.title}>
-                    Explore
-                </Text>
+                <Text style={s.title}>Explore</Text>
+
+                {/* Topics */}
                 <View style={s.CT}>
                     <View style={s.CTHeader}>
-                        <Text style={s.CTHeaderLabel}>
-                            Topic
-                        </Text>
-                        <Link style={s.CTHeaderLink} href={"/"}>
-                            See All
-                        </Link>
+                        <Text style={s.CTHeaderLabel}>Topic</Text>
+                        <Link style={s.CTHeaderLink} href="/">See All</Link>
                     </View>
-                    {
-                        news.length > 0 && news.map((item) => (
-                            <CompactTopicCard key={item.id} data={item}/>
-                        ))
-                    }
+                    {topics.map((item) => (
+                        <CompactTopicCard
+                            key={item.id}
+                            data={item}
+                            saved={savedTopics.includes(item.id)}
+                            onToggleSave={() => handleToggleSave(item.id)}
+                        />
+                    ))}
                 </View>
+
+                {/* Popular Topics */}
                 <View style={s.PT}>
                     <View style={s.PTHeader}>
-                        <Text style={s.PTHeaderLabel}>
-                            Popular Topics
-                        </Text>
+                        <Text style={s.PTHeaderLabel}>Popular Topics</Text>
                     </View>
-                    <PopularTopicCard/>
-                    <PopularTopicCard/>
-                    <PopularTopicCard/>
-                    <PopularTopicCard/>
+                    {news.slice(0, 3).map((item) => (
+                        <PopularTopicCard key={item.id} data={item}/>
+                    ))}
                 </View>
             </ScrollView>
         </View>
@@ -65,7 +63,6 @@ const ExploreScreen = () => {
 const s = StyleSheet.create({
     container: {
         paddingHorizontal: 28,
-
     },
     title: {
         fontSize: 32,
@@ -74,13 +71,13 @@ const s = StyleSheet.create({
         fontWeight: "bold",
     },
     CT: {
-        marginBottom: 22
+        marginBottom: 22,
     },
     CTHeader: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 22
+        marginBottom: 22,
     },
     CTHeaderLabel: {
         fontSize: 18,
@@ -91,20 +88,20 @@ const s = StyleSheet.create({
     CTHeaderLink: {
         fontSize: 16,
         fontFamily: "Poppins_400Regular",
-        color: Grayscale.bodyText
+        color: Grayscale.bodyText,
     },
     PT: {
         marginBottom: 22,
     },
     PTHeader: {
-        marginBottom: 22
+        marginBottom: 22,
     },
     PTHeaderLabel: {
         fontSize: 18,
         fontFamily: "Poppins_700Bold",
         color: "#000",
         fontWeight: "bold",
-    }
+    },
 })
 
-export default ExploreScreen;
+export default ExploreScreen

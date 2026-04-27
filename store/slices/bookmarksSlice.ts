@@ -3,7 +3,12 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 export interface Article {
     id: number | string;
     title: string;
-    country: string;
+    category: string;
+    source: string;
+    sourceImage: string;
+    time: string;
+    body: string;
+    image: string;
 }
 
 interface BookmarkState {
@@ -32,7 +37,6 @@ const bookmarksSlice = createSlice({
             }
         }
     },
-
 })
 
 export const {toggleBookmark} = bookmarksSlice.actions;
