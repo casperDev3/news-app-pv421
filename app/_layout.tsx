@@ -7,7 +7,7 @@ import {store, persistor} from "@/store";
 
 
 export const unstable_settings = {
-    anchor: 'index',
+    anchor: '(tabs)',
 };
 
 export default function RootLayout() {
