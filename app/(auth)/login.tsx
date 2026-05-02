@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert} from 'react-native'
 import {useFonts, Poppins_700Bold, Poppins_400Regular, Poppins_500Medium} from "@expo-google-fonts/poppins"
 import {useRouter} from "expo-router"
 import {useDispatch} from "react-redux"
@@ -9,6 +9,8 @@ import TopSpace from "@/components/system/topSpace"
 import FormInput from "@/components/ui/input"
 import PrimaryButton from "@/components/ui/buttons/primary"
 import OutlineButton from "@/components/ui/buttons/outline"
+import ApiClient from "@/services/api";
+import * as SecureStore from 'expo-secure-store'
 
 const TEST_EMAIL = "test@kabar.com"
 const TEST_PASSWORD = "kabar123"
@@ -18,26 +20,43 @@ const LoginScreen = () => {
     const [fontsLoaded] = useFonts({Poppins_700Bold, Poppins_400Regular, Poppins_500Medium})
     const router = useRouter()
     const dispatch = useDispatch()
-    const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
 
     // load
     if (!fontsLoaded) return null
 
     // handlers
-    const handleLogin = () => {
-        if (email === TEST_EMAIL && password === TEST_PASSWORD) {
+    const handleLogin = async () => {
+        try {
+            setLoading(true)
+            const response = await ApiClient.getInstance().post(
+                '/auth/login/',
+                {
+                    username,
+                    password,
+                }
+            )
+            // @ts-ignore
+            const {access, refresh} = response.data;
+
+            await SecureStore.setItemAsync('access_token', access);
+            await SecureStore.setItemAsync('refresh_token', refresh);
+
             setError("")
             dispatch(login())
             router.replace('/(tabs)')
-        } else {
-            setError("Невірний email або пароль")
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false)
         }
     }
 
     const handleTestLogin = () => {
-        setEmail(TEST_EMAIL)
+        setUsername(TEST_EMAIL)
         setPassword(TEST_PASSWORD)
         setError("")
         dispatch(login())
@@ -51,23 +70,28 @@ const LoginScreen = () => {
             <Text style={s.logo}>KaBar</Text>
             <Text style={s.title}>Welcome back 👋</Text>
             <Text style={s.subtitle}>
-                Enter your email and password to login
+                Enter your username and password to login
             </Text>
 
             {/* form */}
             <View style={s.form}>
                 <FormInput
-                    label="Email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChangeText={(v) => { setEmail(v); setError("") }}
-                    keyboardType="email-address"
+                    label="Username"
+                    placeholder="Enter your username"
+                    value={username}
+                    onChangeText={(v) => {
+                        setUsername(v);
+                        setError("")
+                    }}
                 />
                 <FormInput
                     label="Password"
                     placeholder="Enter your password"
                     value={password}
-                    onChangeText={(v) => { setPassword(v); setError("") }}
+                    onChangeText={(v) => {
+                        setPassword(v);
+                        setError("")
+                    }}
                     secureTextEntry={true}
                 />
                 {error ? <Text style={s.error}>{error}</Text> : null}
@@ -93,7 +117,7 @@ const LoginScreen = () => {
                 <View style={s.testCredentials}>
                     <Text style={s.testLabel}>Тестовий акаунт</Text>
                     <View style={s.testRow}>
-                        <Text style={s.testKey}>Email</Text>
+                        <Text style={s.testKey}>Username</Text>
                         <Text style={s.testValue}>{TEST_EMAIL}</Text>
                     </View>
                     <View style={s.testRow}>
@@ -115,7 +139,7 @@ const LoginScreen = () => {
                 onPress={() => router.push('/(auth)/signup')}
             >
                 <Text style={s.signupText}>
-                    Don't have an account?{" "}
+                    Don&#39;t have an account?{" "}
                     <Text style={s.signupLink}>Sign up</Text>
                 </Text>
             </TouchableOpacity>

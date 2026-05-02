@@ -18,21 +18,21 @@ function NavigationGuard() {
     const rehydrated = useSelector((s: any) => s.auth._persist?.rehydrated ?? false);
 
     // 1. Ініціалізація та приховання Splash Screen
-    // useEffect(() => {
-    //     const initApp = async () => {
-    //         try {
-    //             // Місце для майбутньої перевірки токенів з AsyncStorage чи SecureStore
-    //             // dispatch(setInitData({ firstLaunch: isFirstLaunch, loggedIn: false }));
-    //         } catch (e) {
-    //             console.warn(e);
-    //         } finally {
-    //             // Обов'язково ховаємо Splash Screen
-    //             await SplashScreen.hideAsync();
-    //         }
-    //     };
-    //
-    //     initApp();
-    // }, []);
+    useEffect(() => {
+        const initApp = async () => {
+            try {
+                // Місце для майбутньої перевірки токенів з AsyncStorage чи SecureStore
+                // dispatch(setInitData({ firstLaunch: isFirstLaunch, loggedIn: false }));
+            } catch (e) {
+                console.warn(e);
+            } finally {
+                // Обов'язково ховаємо Splash Screen
+                await SplashScreen.hideAsync();
+            }
+        };
+
+        initApp();
+    }, []);
 
     // 2. Логіка захисту роутів (Navigation Guard)
     useEffect(() => {
