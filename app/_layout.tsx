@@ -1,11 +1,26 @@
-import { useEffect } from "react";
-import { Slot, useRouter, useSegments, useRootNavigationState } from "expo-router";
+import {useEffect} from "react";
+import {Slot, useRouter, useSegments, useRootNavigationState} from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { Provider, useSelector } from "react-redux";
-import { store, RootState } from "@/store";
+import {Provider, useSelector} from "react-redux";
+import {store, RootState} from "@/store";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+
 
 // Утримуємо Splash Screen до завершення ініціалізації
 SplashScreen.preventAutoHideAsync();
+
+Notifications.setNotificationHandler({
+    // @ts-ignore
+    handleNotification: async () => ({
+        // shouldShowAlert: true,
+        shouldShowBanner: true,
+        shouldShowList: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false
+    }),
+})
+
 
 function NavigationGuard() {
     const router = useRouter();
@@ -14,7 +29,7 @@ function NavigationGuard() {
     // Отримуємо стан кореневої навігації для перевірки готовності
     const navigationState = useRootNavigationState();
 
-    const { isFirstLaunch, isAuthenticated } = useSelector((s: RootState) => s.auth);
+    const {isFirstLaunch, isAuthenticated} = useSelector((s: RootState) => s.auth);
     const rehydrated = useSelector((s: any) => s.auth._persist?.rehydrated ?? false);
 
     // 1. Ініціалізація та приховання Splash Screen
@@ -32,6 +47,7 @@ function NavigationGuard() {
         };
 
         initApp();
+        registerPushNotificationsAsync();
     }, []);
 
     // 2. Логіка захисту роутів (Navigation Guard)
@@ -62,13 +78,32 @@ function NavigationGuard() {
         return () => clearTimeout(timeout);
     }, [rehydrated, isAuthenticated, isFirstLaunch, segments, navigationState?.key]);
 
-    return <Slot />;
+    return <Slot/>;
+}
+
+async function registerPushNotificationsAsync() {
+    console.log("RegisterPushNotificationsAsync")
+    // if(Device.isDevice){
+    const {status: existingStatus} = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+        const {status} = await Notifications.requestPermissionsAsync()
+        finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+        return
+    }
+    const token = (await Notifications.getExpoPushTokenAsync()).data
+    console.log(token)
+    // }
+    console.log("RegisterPushNotificationsAsync")
 }
 
 export default function RootLayout() {
     return (
         <Provider store={store}>
-            <NavigationGuard />
+            <NavigationGuard/>
         </Provider>
     );
 }
+

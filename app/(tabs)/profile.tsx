@@ -6,6 +6,7 @@ import {useRouter} from "expo-router"
 import TopSpace from "@/components/system/topSpace"
 import NewsCard from "@/components/cards/newsCard"
 import {news} from "@/mockup/news"
+import {Link} from "expo-router"
 
 const STATS = [
     {label: "Articles", value: "32"},
@@ -53,12 +54,19 @@ const ProfileScreen = () => {
                             </View>
                         ))}
                     </View>
+                    {/* @ts-ignore */}
+                    <Link href={'/chats/'}>
+                        <Text>
+                            Chats
+                        </Text>
+                    </Link>
                 </View>
 
                 {/* articles */}
                 <View style={s.section}>
                     <Text style={s.sectionTitle}>My Articles</Text>
                     {news.map((item) => (
+                        // @ts-ignore
                         <NewsCard key={item.id} data={item}/>
                     ))}
                 </View>

@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import bookmarksReduser from './slices/bookmarksSlice';
 import authReducer from './slices/authSlice';
+import chatReducer from './slices/chatSlice';
 
 const bookmarksPersistConfig = { key: 'bookmarks', storage: AsyncStorage };
 const authPersistConfig = { key: 'auth', storage: AsyncStorage };
@@ -23,10 +24,12 @@ export const store = configureStore({
         reducer: {
             bookmarks: persistedBookmarksReducer,
             auth: persistedAuthReducer,
+            chat: chatReducer,
         },
         middleware: (getDefaultMiddleware) =>
             getDefaultMiddleware({
                 serializableCheck: {
+                    // @ts-ignore
                     ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, REGISTER, PURGE],
                 }
             })

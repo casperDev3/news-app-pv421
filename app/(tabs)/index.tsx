@@ -1,6 +1,6 @@
-import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
+import {View, Text, StyleSheet, ScrollView, TouchableOpacity, Button, Alert} from 'react-native'
 import {useFonts, Poppins_700Bold, Poppins_400Regular, Poppins_500Medium} from "@expo-google-fonts/poppins"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import {Link} from "expo-router"
 import {Bell} from "lucide-react-native"
 import {Grayscale, Primary} from "@/constants/colors"
@@ -9,6 +9,8 @@ import SearchBar from "@/components/ui/searchBar"
 import PopularTopicCard from "@/components/cards/popularTopic"
 import NewsCard from "@/components/cards/newsCard"
 import {news} from "@/mockup/news"
+import * as Notifications from "expo-notifications";
+
 
 const CATEGORIES = ["All", "Sports", "Politics", "Business", "Health", "Travel", "Science"]
 
@@ -16,6 +18,7 @@ const HomeScreen = () => {
     // init
     const [fontsLoaded] = useFonts({Poppins_700Bold, Poppins_400Regular, Poppins_500Medium})
     const [activeCategory, setActiveCategory] = useState("All")
+
 
     // load
     if (!fontsLoaded) return null
@@ -25,6 +28,26 @@ const HomeScreen = () => {
         ? news
         : news.filter(n => n.category === activeCategory)
 
+    // handlers
+    const handlePN = async () => {
+        try {
+            await Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: "test",
+                        body: "test",
+
+                    },
+                    trigger: null
+                }
+            )
+        } catch (error) {
+            console.log(error)
+        } finally {
+            console.log("It's also done")
+        }
+    }
+
+    // @ts-ignore
     return (
         <View style={s.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -37,6 +60,9 @@ const HomeScreen = () => {
                         <Bell size={24} color={Grayscale.textActive}/>
                     </TouchableOpacity>
                 </View>
+                <View>
+                    <Button title={"test push notification"} onPress={handlePN}/>
+                </View>
 
                 <SearchBar/>
 
@@ -46,6 +72,7 @@ const HomeScreen = () => {
                         <Text style={s.sectionTitle}>Trending</Text>
                         <Link style={s.seeAll} href="/">See all</Link>
                     </View>
+                    {/* @ts-ignore */}
                     <PopularTopicCard data={trending}/>
                 </View>
 
@@ -73,6 +100,7 @@ const HomeScreen = () => {
 
                     {/* news list */}
                     {filteredNews.map((item) => (
+                        // @ts-ignore
                         <NewsCard key={item.id} data={item}/>
                     ))}
                 </View>
@@ -80,6 +108,7 @@ const HomeScreen = () => {
         </View>
     )
 }
+
 
 const s = StyleSheet.create({
     container: {
