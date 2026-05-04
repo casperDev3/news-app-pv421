@@ -1,28 +1,52 @@
 import {View, Text, StyleSheet, ScrollView, Image, TouchableOpacity} from 'react-native'
 import {useFonts, Poppins_700Bold, Poppins_400Regular, Poppins_500Medium} from "@expo-google-fonts/poppins"
 import {useLocalSearchParams, useRouter} from "expo-router"
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import {ChevronLeft, Share2, Heart, MessageCircle, Bookmark} from "lucide-react-native"
 import {useDispatch, useSelector} from "react-redux"
 import {toggleBookmark} from "@/store/slices/bookmarksSlice"
 import {RootState} from "@/store"
 import {Grayscale, Primary} from "@/constants/colors"
-import {news} from "@/mockup/news"
+import {Article, news} from "@/mockup/news"
 import PrimaryButton from "@/components/ui/buttons/primary"
+import ApiClient from "@/services/api";
+import {options} from "axios";
+// import ApiClient from "@/services/api";
 
 const ArticleScreen = () => {
     // init
     const [fontsLoaded] = useFonts({Poppins_700Bold, Poppins_400Regular, Poppins_500Medium})
     const {id} = useLocalSearchParams()
+    console.log("___id_news", id)
     const router = useRouter()
     const dispatch = useDispatch()
     const [liked, setLiked] = useState(false)
     const [following, setFollowing] = useState(false)
     const bookmarks = useSelector((state: RootState) => state.bookmarks.savedArticles)
 
-    const article = news.find(n => String(n.id) === String(id)) ?? news[0]
-    const isBookmarked = bookmarks.some(b => b.id === article.id)
 
+    const isBookmarked = bookmarks.some(b => b.id === article.id)
+    const [loading, setLoading] = useState<boolean>(false)
+    const [article, setArticle] = useState<any>(null)
+    const time = new Date(article?.created_date).toLocaleTimeString("uk-UA", {
+        hour: '2-digit',
+        minute: '2-digit',
+    })
+
+    useEffect(() => {
+        (async () => {
+            try {
+                setLoading(true);
+                const response = await ApiClient.getInstance().get(`/news/${id}`)
+                const {data} = response
+                setArticle(data)
+            } catch (e) {
+                console.log(e)
+            } finally {
+                setLoading(false)
+            }
+        })()
+    }, [])
     // load
     if (!fontsLoaded) return null
 
@@ -41,10 +65,10 @@ const ArticleScreen = () => {
 
                 {/* source row */}
                 <View style={s.sourceRow}>
-                    <Image style={s.sourceLogo} source={{uri: article.sourceImage}}/>
+                    <Image style={s.sourceLogo} source={{uri: article?.sourceImage || "https://picsum.photos/seed/navy1/800/450"}}/>
                     <View style={s.sourceInfo}>
-                        <Text style={s.sourceName}>{article.source}</Text>
-                        <Text style={s.sourceTime}>{article.time}</Text>
+                        <Text style={s.sourceName}>{article?.author.username}</Text>
+                        <Text style={s.sourceTime}>{time}</Text>
                     </View>
                     <PrimaryButton
                         width={90}
@@ -55,13 +79,13 @@ const ArticleScreen = () => {
                 </View>
 
                 {/* cover */}
-                <Image style={s.cover} source={{uri: article.image}}/>
+                <Image style={s.cover} source={{uri: article?.image || "https://picsum.photos/seed/navy1/800/450"}}/>
 
                 {/* content */}
                 <View style={s.content}>
-                    <Text style={s.category}>{article.category}</Text>
-                    <Text style={s.title}>{article.title}</Text>
-                    <Text style={s.body}>{article.body}</Text>
+                    <Text style={s.category}>{article?.category}</Text>
+                    <Text style={s.title}>{article?.title}</Text>
+                    <Text style={s.body}>{article?.content}</Text>
                 </View>
             </ScrollView>
 

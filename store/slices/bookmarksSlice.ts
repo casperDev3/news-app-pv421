@@ -9,6 +9,8 @@ export interface Article {
     time: string;
     body: string;
     image: string;
+    author: any;
+    created_date: string
 }
 
 interface BookmarkState {

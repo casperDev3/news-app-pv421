@@ -13,25 +13,28 @@ const PopularTopicCard = ({data}: IProps) => {
     // init
     const [fontsLoaded] = useFonts({Poppins_500Medium, Poppins_700Bold})
     const router = useRouter()
-    const {id, title, category, source, sourceImage, time, image} = data
-
+    const {id, title, image, category, sourceImage, author, source, created_date} = data
+    const time = new Date(created_date).toLocaleTimeString('uk-UA', {
+        hour: '2-digit',
+        minute: '2-digit',
+    })
     // load
     if (!fontsLoaded) return null
 
     return (
         <View style={s.card}>
             <TouchableOpacity onPress={() => router.push(`/news/${id}`)}>
-                <Image style={s.cardCover} source={{uri: image}}/>
+                <Image style={s.cardCover} source={{uri: image || "https://picsum.photos/seed/navy1/800/450"}}/>
             </TouchableOpacity>
-            <Text style={s.cardCategory}>{category}</Text>
+            <Text style={s.cardCategory}>{category || ""}</Text>
             <TouchableOpacity onPress={() => router.push(`/news/${id}`)}>
                 <Text style={s.cardTitle}>{title}</Text>
             </TouchableOpacity>
             <View style={s.cardDetails}>
                 <View style={s.cardDetailsMeta}>
                     <View style={s.CDMSource}>
-                        <Image style={s.CDMSourceImg} source={{uri: sourceImage}}/>
-                        <Text style={s.CDMSourceText}>{source}</Text>
+                        <Image style={s.CDMSourceImg} source={{uri: sourceImage || "https://picsum.photos/seed/navy1/800/450"}}/>
+                        <Text style={s.CDMSourceText}>{author?.username || "Anonim"}</Text>
                     </View>
                     <View style={s.CDMTime}>
                         <Clock size={12} color={Grayscale.bodyText}/>
