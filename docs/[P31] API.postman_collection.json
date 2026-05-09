@@ -4862,6 +4862,371 @@
               ]
             }
           ]
+        },
+        {
+          "name": "GraphQL",
+          "item": [
+            {
+              "name": "example",
+              "item": [
+                {
+                  "name": "Workshop by name",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "query {\n    workshopByName(name: \"test\"){\n        name\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Multiple Queries",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "query {\n    workshopByName(name: \"test\"){\n        name\n    },\n    allWorkers {\n        id,\n        name,\n        position,\n        workshop {\n            name\n        }\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Make an attendance worker",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "mutation{\n    makeAttendance(workerId: \"1\"){\n        success\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Multiple Mutations",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "mutation{\n    create: createWorker(\n        name: \"John\",\n        position: \"QA\",\n        workshopId: \"1\"\n    ){\n            id,\n            name,\n            position,\n            workshop {\n                id,\n                name\n            }\n    },\n    update: updateWorker(\n        id: \"6\",\n        name: \"John Doe\",\n        position: \"Dev3\",\n    ){\n            id,\n            name,\n            position,\n            workshop {\n                id,\n                name\n            }\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Mix Query & Mutation",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "mutation{\n    create: createWorker(\n        name: \"John\",\n        position: \"QA\",\n        workshopId: \"1\"\n    ){\n            id,\n            name,\n            position,\n            workshop {\n                id,\n                name\n            }\n    }\n}\nquery {\n    workers: allWorkers {\n        id,\n        name,\n        position,\n        workshop {\n            name\n        }\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "workers",
+              "item": [
+                {
+                  "name": "Get a worker",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "query {\n    worker: oneWorker(id: \"1\"){\n        id,\n        name,\n        position\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Get all workers",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "query {\n    workers: allWorkers {\n        id,\n        name,\n        position,\n        workshop {\n            name\n        }\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Create a worker",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "mutation{\n    worker: createWorker(\n        name: \"John\",\n        position: \"QA\",\n        workshopId: \"1\"\n    ){\n            id,\n            name,\n            position,\n            workshop {\n                id,\n                name\n            }\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Update a worker",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "mutation{\n    worker: updateWorker(\n        id: \"7\",\n        name: \"John Doe\",\n        position: \"Dev\",\n    ){\n            id,\n            name,\n            position,\n            workshop {\n                id,\n                name\n            }\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Delete a worker",
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc4OTIwMzAwLCJpYXQiOjE3Nzc3MTA3MDAsImp0aSI6IjI3NWRkZDE4Nzc0YjQ2ZjM4MTVlNTM2OGFlNzg3NDlmIiwidXNlcl9pZCI6IjcifQ.fPzShkLfG3fZ5je6ayHOCPHwEFuTWfweOumxR78LPvg",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "graphql",
+                      "graphql": {
+                        "query": "mutation{\n    status: deleteWorker(\n        id: \"5\"\n    ){\n            id,\n            isDeleted\n    }\n}",
+                        "variables": ""
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url_local}}{{prefix}}/graphql/",
+                      "host": [
+                        "{{base_url_local}}{{prefix}}"
+                      ],
+                      "path": [
+                        "graphql",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
         }
       ]
     }

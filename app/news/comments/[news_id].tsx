@@ -1,21 +1,74 @@
-import {View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform} from 'react-native'
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TextInput,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    Platform
+} from 'react-native'
 import {useFonts, Poppins_500Medium, Poppins_400Regular} from "@expo-google-fonts/poppins"
 import {useRouter} from "expo-router"
-import {useState} from "react"
+import {useState, useRef, useEffect} from "react"
 import {ChevronLeft, Send} from "lucide-react-native"
 import {Grayscale, Primary} from "@/constants/colors"
 import CommentCard from "@/components/cards/commentCard"
 import {comments} from "@/mockup/comments"
+import * as Notifications from "expo-notifications";
+
+
+const WS_URL = Platform.OS === 'ios'
+    ? 'ws://localhost:8080/ws/notifications/'
+    : 'ws://10.0.2.2:8080/ws/notifications/'
 
 const NewsCommentsScreen = () => {
     // init
     const [fontsLoaded] = useFonts({Poppins_500Medium, Poppins_400Regular})
     const router = useRouter()
     const [text, setText] = useState("")
+    const ws = useRef<WebSocket | null>(null)
 
+    // handlers
+    const handlePN = async (title: string, body: string) => {
+        try {
+            await Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: title || "test",
+                        body: body || "test",
+
+                    },
+                    trigger: null
+                }
+            )
+        } catch (error) {
+            console.log(error)
+        } finally {
+            console.log("It's also done")
+        }
+    }
     // load
-    if (!fontsLoaded) return null
+    useEffect(() => {
+        // connect to websockets
+        ws.current = new WebSocket(WS_URL);
 
+        ws.current.onopen = () => {
+            console.log('WebSocket opened');
+        }
+
+        ws.current.onmessage = (data) => {
+            // const {message} = data.data;
+            const parsedData = JSON.parse(data.data)
+            handlePN("New Article: ", parsedData.message).then()
+        }
+        return () => {
+            if (ws.current) {
+                ws.current.close()
+            }
+        }
+    }, []);
+
+    if (!fontsLoaded) return null
     // handlers
     const handleSend = () => {
         if (text.trim()) {
